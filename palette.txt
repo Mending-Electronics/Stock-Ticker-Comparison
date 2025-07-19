@@ -1,0 +1,4 @@
+            --bs-body-bg: #12202f;
+            --bs-primary: #18bc9c;
+            --bs-secondary: #2c3e50;
+            --bs-secondary: #6c7885;

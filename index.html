@@ -1,0 +1,1631 @@
+
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+
+
+    <meta charset="UTF-8">
+
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
+    <title>Stock Ticker Comparison</title>
+
+
+
+
+
+
+
+    <link rel="shortcut icon" href="https://cdn-icons-png.flaticon.com/128/4531/4531678.png" type="image/x-icon">
+
+
+
+    <!-- Bootstrap -->
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/5.3.3/flatly/bootstrap.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script src="js/color-modes.js" type="text/javascript"></script>
+
+    <!-- Chart.js -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- Axios -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.9.0/axios.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+
+    <!-- Add video recording libraries -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+
+
+
+
+
+
+ <!--
+
+
+
+    <style>
+
+        :root {
+
+            --bs-body-bg: #12202f;
+
+        }
+
+    </style>
+
+
+
+-->
+
+
+
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+
+
+
+    <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
+
+        <div class="container-fluid">
+
+            <a class="navbar-brand" href="#">Stock Ticker Comparison</a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+
+                <span class="navbar-toggler-icon"></span>
+
+            </button>
+
+
+
+            <div class="collapse navbar-collapse" id="navbarColor01">
+
+                <ul class="navbar-nav me-auto">
+
+                    <li class="nav-item">
+
+                        <a class="nav-link active" href="#">Home
+
+                        <span class="visually-hidden">(current)</span>
+
+                        </a>
+
+                    </li>
+
+                    <li class="nav-item">
+
+                    <a class="nav-link" href="#">Features</a>
+
+                    </li>
+
+                    <li class="nav-item">
+
+                    <a class="nav-link" href="#">About</a>
+
+                    </li>
+
+                </ul>
+
+                </div>
+
+            </div>
+
+
+
+
+
+            <ul class="navbar-nav ms-md-auto">
+
+              <li class="nav-item py-2 py-lg-1 col-12 col-lg-auto">
+
+                <div class="vr d-none d-lg-flex h-100 mx-lg-2 text-white"></div>
+
+                <hr class="d-lg-none my-2 text-white-50">
+
+              </li>
+
+              <li class="nav-item dropdown" data-bs-theme="light">
+
+                <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="theme-menu" aria-expanded="false" data-bs-toggle="dropdown" data-bs-display="static" aria-label="Toggle theme">
+
+                  <i class="bi bi-circle-half"></i>
+
+                  <span class="d-lg-none ms-2">Toggle theme</span>
+
+                </a>
+
+                <ul class="dropdown-menu dropdown-menu-end">
+
+                  <li>
+
+                    <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light" aria-pressed="false">
+
+                      <i class="bi bi-sun-fill"></i><span class="ms-2">Light</span>
+
+                    </button>
+
+                  </li>
+
+                  <li>
+
+                    <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="dark" aria-pressed="true">
+
+                      <i class="bi bi-moon-stars-fill"></i><span class="ms-2">Dark</span>
+
+                    </button>
+
+                  </li>
+
+                </ul>
+
+              </li>
+
+            </ul>
+
+          </div>
+
+        </div>
+
+      </nav>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class="container mt-5">
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+
+            <h2 class="mb-0">Stock Ticker Comparison</h2>
+
+            <div>
+
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tickerModal">
+
+                    <i class="bi bi-list-ul me-1"></i> Liste des Tickers
+
+                </button>
+
+                <a type="button" class="btn btn-info" target="_blank" href="https://stockanalysis.com/stocks/">
+
+                    <i class="bi bi-list-ul me-1"></i> All Stock Symbols
+
+                </a>
+
+            </div>
+
+        </div>
+
+        <div class="card p-4">
+
+
+
+            <form id="tickerForm">
+
+
+
+                <div class="mb-3">
+
+
+
+                    <label class="form-label">Ticker 1:</label>
+
+
+
+                    <input type="text" id="ticker1" class="form-control" placeholder="Enter first ticker (e.g. AAPL)">
+
+
+
+                </div>
+
+
+
+                <div class="mb-3">
+
+
+
+                    <label class="form-label">Ticker 2:</label>
+
+
+
+                    <input type="text" id="ticker2" class="form-control" placeholder="Enter second ticker (e.g. MSFT)">
+
+
+
+                </div>
+
+
+
+                <div class="mb-3">
+
+
+
+                    <label class="form-label">Select Period:</label>
+
+
+
+                    <select id="period" class="form-select">
+
+
+
+                        <option value="1mo">1 Month</option>
+
+
+
+                        <option value="3mo">3 Months</option>
+
+
+
+                        <option value="6mo" selected>6 Months</option>
+
+
+
+                        <option value="1y">1 Year</option>
+
+
+
+                        <option value="2y">2 Year</option>
+
+
+
+                        <option value="5y">5 Year</option>
+
+
+
+                        <option value="10y">10 Year</option>
+
+
+
+                        <option value="25y">25 Year</option>
+
+
+
+                    </select>
+
+
+
+                </div>
+
+
+
+                <button type="button" class="btn btn-primary" onclick="fetchTickerData()">Generate</button>
+
+
+
+            </form>
+
+
+
+        </div>
+
+
+
+
+
+        <div class="card p-4 mt-3 d-flex justify-content-between align-items-center mb-3" id="chartControls">
+
+            <div>
+
+                <button type="button" id="animateChartBtn" class="btn btn-outline-secondary me-2">
+
+                    <i class="bi bi-arrow-bar-right"></i> Animate Timeline
+
+                </button>
+
+                <button type="button" id="recordBtn" class="btn btn-outline-success me-2">
+
+                    <i class="bi bi-camera-video"></i> Record Animation
+
+                </button>
+
+            </div>
+
+        </div>
+
+      
+
+
+
+
+
+
+
+        <div class="chart-container mt-4" style="position: relative; max-height: 90vh; aspect-ratio: 9/16; margin: 0 auto;">
+
+            <canvas id="tickerChart" style="width: 100%; height: 100%;"></canvas>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- Toast Notification -->
+
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+
+        <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+
+            <div class="toast-header bg-body">
+
+                <strong class="me-auto">Notification</strong>
+
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+
+            </div>
+
+            <div class="toast-body bg-body" id="toastMessage">
+
+                <!-- Message will be inserted here -->
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- Ticker List Modal -->
+
+    <div class="modal fade" id="tickerModal" tabindex="-1" aria-labelledby="tickerModalLabel" aria-hidden="true">
+
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+
+                    <h5 class="modal-title" id="tickerModalLabel">Liste des Tickers Yahoo Finance</h5>
+
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="d-flex justify-content-between mb-3">
+
+                        <div class="input-group w-50">
+
+                            <span class="input-group-text"><i class="bi bi-search"></i></span>
+
+                            <input type="text" id="tickerSearch" class="form-control" placeholder="Rechercher un ticker...">
+
+                        </div>
+
+                        <div class="d-flex">
+
+                            <button id="refreshTickers" class="btn btn-outline-secondary me-2">
+
+                                <i class="bi bi-arrow-clockwise"></i> Actualiser
+
+                            </button>
+
+                            <button id="exportCsv" class="btn btn-primary">
+
+                                <i class="bi bi-download"></i> Exporter CSV
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    <div class="table-responsive">
+
+                        <table class="table table-hover" id="tickerTable">
+
+                            <thead class="table-light">
+
+                                <tr>
+
+                                    <th>Symbole</th>
+
+                                    <th>ID</th>
+
+                                    <th>Description</th>
+
+                                    <th>Pays</th>
+
+                                    <th>Devise</th>
+
+                                    <th>Actions</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody id="tickerTableBody">
+
+                                <!-- Ticker data will be loaded here -->
+
+                                <tr>
+
+                                    <td colspan="6" class="text-center">
+
+                                        <div class="spinner-border text-primary" role="status">
+
+                                            <span class="visually-hidden">Chargement...</span>
+
+                                        </div>
+
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <div class="text-muted small" id="tickerCount">Chargement des données...</div>
+
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <script>
+
+
+
+        let globalChartInstance = null;
+
+
+
+        async function fetchTickerData() {
+
+
+
+            const ticker1 = document.getElementById("ticker1").value.trim();
+
+
+
+            const ticker2 = document.getElementById("ticker2").value.trim();
+
+
+
+            const period = document.getElementById("period").value;
+
+
+
+
+
+
+
+            if (!ticker1 || !ticker2) {
+
+
+
+                showToast("Please enter both tickers.", 'error');
+
+                return;
+
+            }
+
+
+
+            showToast(`Fetching data for ${ticker1} and ${ticker2}...`, 'info');
+
+
+
+            const proxyUrl = "https://api.allorigins.win/raw?url=";
+
+            const yahooUrl1 = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker1}?range=${period}&interval=1d`;
+
+            const yahooUrl2 = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker2}?range=${period}&interval=1d`;
+
+
+
+            try {
+
+                console.log("Fetching data for:", ticker1, ticker2);
+
+
+
+                const [response1, response2] = await Promise.all([
+
+                    axios.get(proxyUrl + encodeURIComponent(yahooUrl1)),
+
+                    axios.get(proxyUrl + encodeURIComponent(yahooUrl2))
+
+                ]);
+
+
+
+                console.log("Fetched Data for Ticker 1:", response1.data);
+
+                console.log("Fetched Data for Ticker 2:", response2.data);
+
+
+
+                // Process timestamps to extract years
+
+                const timestamps1 = response1.data.chart.result[0].timestamp;
+
+                const dates = timestamps1.map(ts => new Date(ts * 1000));
+
+                const labels = dates.map(date => {
+
+                    // Only show label if it's not empty
+
+                    const currentYear = date.getFullYear();
+
+                    const prevDate = dates[dates.indexOf(date) - 1];
+
+                    const prevYear = prevDate ? prevDate.getFullYear() : null;
+
+                                     if (prevYear === null || currentYear !== prevYear) {
+
+                        return currentYear.toString();
+
+                    }
+
+                    return '';
+
+                });
+
+
+
+                const data1 = response1.data.chart.result[0].indicators.quote[0].close;
+
+                const data2 = response2.data.chart.result[0].indicators.quote[0].close;
+
+                const currency1 = response1.data.chart.result[0].meta.currency;
+
+                const currency2 = response2.data.chart.result[0].meta.currency;
+
+
+
+                // Check if Chart.js is available
+
+                if (typeof Chart !== "undefined") {
+
+                    const ctx = document.getElementById("tickerChart").getContext("2d");
+
+                                     // Get current theme
+
+                    const currentTheme = document.documentElement.getAttribute('data-bs-theme') || 'light';
+
+                    const textColor = currentTheme === 'dark' ? 'rgba(255, 255, 255, 0.9)' : 'rgba(0, 0, 0, 0.7)';
+
+                    const gridColor = currentTheme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+
+                                     // Destroy existing chart if it exists and is a valid Chart instance
+
+                    if (window.globalChartInstance && typeof window.globalChartInstance.destroy === 'function') {
+
+                        window.globalChartInstance.destroy();
+
+                    }
+
+                                     // Create new chart instance
+
+                    window.globalChartInstance = new Chart(ctx, {
+
+                        type: "line",
+
+                        // data: {
+
+                        //     labels: labels,
+
+                        //     datasets: [
+
+                        //         {
+
+                        //             label: ticker1,
+
+                        //             data: data1,
+
+                        //             borderColor: "#cecece96",
+
+                        //             backgroundColor: "rgba(44, 62, 80, 0.1)",
+
+                        //             borderWidth: 2,
+
+                        //             tension: 0.1,
+
+                        //             fill: true
+
+                        //         },
+
+                        //         {
+
+                        //             label: ticker2,
+
+                        //             data: data2,
+
+                        //             borderColor: "#18bc9c",
+
+                        //             backgroundColor: "rgba(24, 188, 156, 0.1)",
+
+                        //             borderWidth: 2,
+
+                        //             tension: 0.1,
+
+                        //             fill: true
+
+                        //         }
+
+                        //     ]
+
+                        // },
+
+                        data: {
+
+                            labels: labels,
+
+                            datasets: [
+
+                                {
+
+                                    label: ticker1,
+
+                                    data: data1,
+
+                                    borderColor: "#cecece96",
+
+                                    backgroundColor: "rgba(44, 62, 80, 0.1)",
+
+                                    borderWidth: 3,
+
+                                    tension: 0.1,
+
+                                    fill: true,
+
+                                    pointRadius: 0 // Set radius to 0 to hide points
+
+                                },
+
+                                {
+
+                                    label: ticker2,
+
+                                    data: data2,
+
+                                    borderColor: "#18bc9c",
+
+                                    backgroundColor: "rgba(24, 188, 156, 0.1)",
+
+                                    borderWidth: 3,
+
+                                    tension: 0.1,
+
+                                    fill: false,
+
+                                    pointRadius: 0 // Set radius to 0 to hide points
+
+                                }
+
+                            ]
+
+                        },
+
+                        options: {
+
+                            responsive: true,
+
+                            maintainAspectRatio: true,
+
+                            plugins: {
+
+                                legend: {
+
+                                    labels: {
+
+                                        color: textColor,
+
+                                    }
+
+                                },
+
+                                tooltip: {
+
+                                    mode: 'index',
+
+                                    intersect: false,
+
+                                    backgroundColor: currentTheme === 'dark' ? 'rgba(0, 0, 0, 0.8)' : 'rgba(255, 255, 255, 0.9)',
+
+                                    titleColor: textColor,
+
+                                    bodyColor: textColor,
+
+                                    borderColor: gridColor,
+
+                                    borderWidth: 1,
+
+                                }
+
+                            },
+
+                            scales: {
+
+                                x: {
+
+                                    ticks: {
+
+                                        color: textColor,
+
+                                        maxRotation: 0,
+
+                                        callback: function(value, index, values) {
+
+                                            // Only show label if it's not empty
+
+                                            return this.getLabelForValue(value) || null;
+
+                                        }
+
+                                    },
+
+                                    grid: {
+
+                                        color: gridColor,
+
+                                        drawBorder: true
+
+                                    }
+
+                                },
+
+                                y: {
+
+                                    ticks: {
+
+                                        color: textColor
+
+                                    },
+
+                                    grid: {
+
+                                        color: gridColor,
+
+                                        drawBorder: true
+
+                                    },
+
+                                    title: {
+
+                                        display: true,
+
+                                        text: `Price (${currency1})`,
+
+                                        color: textColor
+
+                                    }
+
+                                }
+
+                            },
+
+                            interaction: {
+
+                                mode: 'nearest',
+
+                                axis: 'x',
+
+                                intersect: false
+
+                            }
+
+                        }
+
+                    });
+
+                                     showToast(`Successfully loaded data for ${ticker1} and ${ticker2}`, 'success');
+
+                } else {
+
+                    console.error("Chart.js failed to load!");
+
+                    showToast("Failed to load chart library. Please refresh the page.", 'error');
+
+                }
+
+            } catch (error) {
+
+                console.error("Error fetching data:", error);
+
+                showToast("Failed to fetch data. Please check the tickers and try again.", 'error');
+
+            }
+
+        }
+
+             // Show toast notification
+
+        function showToast(message, type = 'info') {
+
+            const toastEl = document.getElementById('liveToast');
+
+            const toastMessage = document.getElementById('toastMessage');
+
+                     // Set message and style
+
+            toastMessage.textContent = message;
+
+            toastMessage.className = 'toast-body';
+
+            if (type === 'error') {
+
+                toastMessage.classList.add('text-danger');
+
+            } else if (type === 'success') {
+
+                toastMessage.classList.add('text-success');
+
+            }
+
+                     // Show the toast
+
+            const toast = new bootstrap.Toast(toastEl);
+
+            toast.show();
+
+        }
+
+
+
+        // Add event listener for theme changes to update chart colors
+
+        document.addEventListener('DOMContentLoaded', function() {
+
+            // Initial chart if needed
+
+            if (typeof fetchTickerData === 'function') {
+
+                // Optional: Auto-fetch data on page load with default values
+
+                // fetchTickerData();
+
+            }
+
+                     // Listen for theme changes
+
+            const observer = new MutationObserver(function(mutations) {
+
+                mutations.forEach(function(mutation) {
+
+                    if (mutation.attributeName === 'data-bs-theme' && window.globalChartInstance) {
+
+                        // Re-fetch data to update chart with new theme colors
+
+                        fetchTickerData();
+
+                    }
+
+                });
+
+            });
+
+                     observer.observe(document.documentElement, {
+
+                attributes: true
+
+            });
+
+        });
+
+             // Fonction pour charger la liste des tickers
+
+       async function loadTickers() {
+
+           const tbody = document.getElementById('tickerTableBody');
+
+           const tickerCount = document.getElementById('tickerCount');
+
+                   try {
+
+               showToast('Chargement de la liste des tickers...', 'info');
+
+                           // Liste statique des principaux indices et actions
+
+               const tickers = [
+
+                   // Indices
+
+                   { symbol: '^GSPC', name: 'S&P 500', type: 'Indice', region: 'États-Unis', currency: 'USD' },
+
+                   { symbol: '^DJI', name: 'Dow Jones', type: 'Indice', region: 'États-Unis', currency: 'USD' },
+
+                   { symbol: '^IXIC', name: 'NASDAQ', type: 'Indice', region: 'États-Unis', currency: 'USD' },
+
+                   { symbol: '^FTSE', name: 'FTSE 100', type: 'Indice', region: 'Royaume-Uni', currency: 'GBP' },
+
+                   { symbol: '^FCHI', name: 'CAC 40', type: 'Indice', region: 'France', currency: 'EUR' },
+
+                   { symbol: '^GDAXI', name: 'DAX', type: 'Indice', region: 'Allemagne', currency: 'EUR' },
+
+                                   // Actions US
+
+                   { symbol: 'AAPL', name: 'Apple Inc.', type: 'Action', region: 'États-Unis', currency: 'USD' },
+
+                   { symbol: 'MSFT', name: 'Microsoft', type: 'Action', region: 'États-Unis', currency: 'USD' },
+
+                   { symbol: 'GOOGL', name: 'Alphabet', type: 'Action', region: 'États-Unis', currency: 'USD' },
+
+                   { symbol: 'AMZN', name: 'Amazon', type: 'Action', region: 'États-Unis', currency: 'USD' },
+
+                   { symbol: 'META', name: 'Meta', type: 'Action', region: 'États-Unis', currency: 'USD' },
+
+                   { symbol: 'TSLA', name: 'Tesla', type: 'Action', region: 'États-Unis', currency: 'USD' },
+
+                   { symbol: 'NVDA', name: 'NVIDIA', type: 'Action', region: 'États-Unis', currency: 'USD' },
+
+                   { symbol: 'JPM', name: 'JPMorgan Chase', type: 'Action', region: 'États-Unis', currency: 'USD' },
+
+                                   // Actions européennes
+
+                   { symbol: 'AIR.PA', name: 'Airbus', type: 'Action', region: 'France', currency: 'EUR' },
+
+                   { symbol: 'MC.PA', name: 'LVMH', type: 'Action', region: 'France', currency: 'EUR' },
+
+                   { symbol: 'SAP.DE', name: 'SAP', type: 'Action', region: 'Allemagne', currency: 'EUR' },
+
+                   { symbol: 'SHEL', name: 'Shell', type: 'Action', region: 'Royaume-Uni', currency: 'GBP' },
+
+                   { symbol: 'ASML.AS', name: 'ASML', type: 'Action', region: 'Pays-Bas', currency: 'EUR' },
+
+                                   // Crypto-monnaies
+
+                   { symbol: 'BTC-USD', name: 'Bitcoin', type: 'Crypto', region: 'Monde', currency: 'USD' },
+
+                   { symbol: 'ETH-USD', name: 'Ethereum', type: 'Crypto', region: 'Monde', currency: 'USD' },
+
+                   { symbol: 'BNB-USD', name: 'Binance Coin', type: 'Crypto', region: 'Monde', currency: 'USD' },
+
+                                   // Matières premières
+
+                   { symbol: 'GC=F', name: 'Or', type: 'Matière première', region: 'Monde', currency: 'USD' },
+
+                   { symbol: 'CL=F', name: 'Pétrole brut', type: 'Matière première', region: 'Monde', currency: 'USD' }
+
+               ];
+
+                   // Vider le tableau
+
+               tbody.innerHTML = '';
+
+                           // Trier les tickers par type puis par nom
+
+               tickers.sort((a, b) => {
+
+                   if (a.type !== b.type) {
+
+                       return a.type.localeCompare(b.type);
+
+                   }
+
+                   return a.name.localeCompare(b.name);
+
+               });
+
+                           // Ajouter chaque ticker au tableau
+
+               tickers.forEach(ticker => {
+
+                   const row = document.createElement('tr');
+
+                   row.innerHTML = `
+
+                       <td>${ticker.symbol}</td>
+
+                       <td>${ticker.name}</td>
+
+                       <td>${ticker.type}</td>
+
+                       <td>${ticker.region}</td>
+
+                       <td>${ticker.currency}</td>
+
+                       <td>
+
+                           <button class="btn btn-sm btn-primary copy-ticker"
+
+                                   data-ticker="${ticker.symbol}"
+
+                                   title="Copier le ticker">
+
+                               <i class="bi bi-clipboard"></i>
+
+                           </button>
+
+                       </td>
+
+                   `;
+
+                   tbody.appendChild(row);
+
+               });
+
+                           // Mettre à jour le compteur
+
+               tickerCount.textContent = `${tickers.length} tickers chargés`;
+
+                           // Ajouter les écouteurs d'événements pour les boutons de copie
+
+               setupCopyButtons();
+
+                           // Configurer la recherche
+
+               setupTickerSearch();
+
+                       } catch (error) {
+
+               console.error('Erreur lors du chargement des tickers:', error);
+
+               tbody.innerHTML = `
+
+                   <tr>
+
+                       <td colspan="6" class="text-center text-danger">
+
+                           Erreur lors du chargement des données.
+
+                           <div class="mt-2 small">${error.message}</div>
+
+                       </td>
+
+                   </tr>`;
+
+               tickerCount.textContent = 'Erreur de chargement';
+
+               showToast('Erreur lors du chargement des tickers', 'error');
+
+           }
+
+       }
+
+             // Configurer les boutons de copie
+
+        function setupCopyButtons() {
+
+            document.querySelectorAll('.copy-ticker').forEach(button => {
+
+                button.addEventListener('click', (e) => {
+
+                    const ticker = e.currentTarget.getAttribute('data-ticker');
+
+                    if (ticker) {
+
+                        navigator.clipboard.writeText(ticker).then(() => {
+
+                            const icon = e.currentTarget.querySelector('i');
+
+                            const originalClass = icon.className;
+
+                                                     // Changer l'icône temporairement
+
+                            icon.className = 'bi bi-check';
+
+                            e.currentTarget.classList.remove('btn-outline-primary');
+
+                            e.currentTarget.classList.add('btn-outline-success');
+
+                                                     // Revenir à l'icône d'origine après 2 secondes
+
+                            setTimeout(() => {
+
+                                icon.className = originalClass;
+
+                                e.currentTarget.classList.remove('btn-outline-success');
+
+                                e.currentTarget.classList.add('btn-outline-primary');
+
+                            }, 2000);
+
+                                                     showToast(`Ticker ${ticker} copié dans le presse-papier`, 'success');
+
+                        });
+
+                    }
+
+                });
+
+            });
+
+        }
+
+             // Configurer la recherche de tickers
+
+        function setupTickerSearch() {
+
+            const searchInput = document.getElementById('tickerSearch');
+
+            const rows = document.querySelectorAll('#tickerTableBody tr');
+
+                     searchInput.addEventListener('input', (e) => {
+
+                const searchTerm = e.target.value.toLowerCase();
+
+                             rows.forEach(row => {
+
+                    const text = row.textContent.toLowerCase();
+
+                    row.style.display = text.includes(searchTerm) ? '' : 'none';
+
+                });
+
+                             // Mettre à jour le compteur
+
+                const visibleCount = Array.from(rows).filter(row => row.style.display !== 'none').length;
+
+                document.getElementById('tickerCount').textContent =
+
+                    `${visibleCount} tickers trouvés`;
+
+            });
+
+        }
+
+             // Charger les tickers lorsque la modale s'ouvre
+
+        document.getElementById('tickerModal').addEventListener('shown.bs.modal', loadTickers);
+
+             // Actualiser la liste des tickers
+
+        document.getElementById('refreshTickers').addEventListener('click', loadTickers);
+
+             // Exporter en CSV
+
+        document.getElementById('exportCsv').addEventListener('click', () => {
+
+            // Implémentez l'export CSV ici
+
+            showToast('Fonctionnalité d\'export CSV non implémentée', 'info');
+
+        });
+
+             // Au chargement de la page
+
+        document.addEventListener('DOMContentLoaded', function() {
+
+            // ... (votre code existant) ...
+
+                     // Ajouter un écouteur pour le clic sur les lignes du tableau
+
+            document.getElementById('tickerTableBody').addEventListener('click', (e) => {
+
+                const row = e.target.closest('tr');
+
+                if (row) {
+
+                    const ticker = row.querySelector('td:first-child').textContent;
+
+                    if (ticker && ticker !== '-') {
+
+                        // Remplir le premier champ vide ou le deuxième champ
+
+                        const ticker1 = document.getElementById('ticker1').value.trim();
+
+                        if (!ticker1) {
+
+                            document.getElementById('ticker1').value = ticker;
+
+                        } else if (!document.getElementById('ticker2').value.trim()) {
+
+                            document.getElementById('ticker2').value = ticker;
+
+                            // Fermer la modale après avoir sélectionné deux tickers
+
+                            const modal = bootstrap.Modal.getInstance(document.getElementById('tickerModal'));
+
+                            if (modal) modal.hide();
+
+                        }
+
+                    }
+
+                }
+
+            });
+
+                     let animationInProgress = false;
+
+
+
+            // Add video recording functionality
+
+            let mediaRecorder;
+
+            let recordedChunks = [];
+
+            let isRecording = false;
+
+            let animationDuration = 10000; // 10 seconds
+
+
+
+            function startRecording() {
+
+                try {
+
+                    console.log('Starting recording process...');
+
+                                     // Get the chart canvas
+
+                    const chartCanvas = document.getElementById('tickerChart');
+
+                    if (!chartCanvas) {
+
+                        console.error('Chart canvas not found');
+
+                        showToast('Chart canvas not found', 'danger');
+
+                        return;
+
+                    }
+
+                    console.log('Chart canvas found');
+
+                                     // Get the Chart.js instance
+
+                    const chartInstance = window.globalChartInstance;
+
+                    if (!chartInstance) {
+
+                        console.error('Chart.js instance not found');
+
+                        showToast('Chart.js instance not found', 'danger');
+
+                        return;
+
+                    }
+
+                    console.log('Chart.js instance found');
+
+                                     // Create a stream from the canvas
+
+                    console.log('Creating canvas stream...');
+
+                                     // Get canvas dimensions
+
+                    const width = chartCanvas.width;
+
+                    const height = chartCanvas.height;
+
+                                     // Create a high-quality stream
+
+                    const stream = chartCanvas.captureStream(60); // 60 FPS for smoother animation
+
+                                     // Create MediaRecorder with high quality settings
+
+                    console.log('Creating MediaRecorder...');
+
+                    mediaRecorder = new MediaRecorder(stream, {
+
+                        mimeType: 'video/webm;codecs=vp9',
+
+                        videoBitsPerSecond: 5000000 // 5 Mbps for high quality
+
+                    });
+
+                                     // Handle data available
+
+                    mediaRecorder.ondataavailable = function(e) {
+
+                        console.log('Data chunk available:', e.data.size);
+
+                        if (e.data.size > 0) {
+
+                            recordedChunks.push(e.data);
+
+                        }
+
+                    };
+
+                                     // Handle stop
+
+                    mediaRecorder.onstop = function() {
+
+                        console.log('Recording stopped');
+
+                                             // Create WebM blob
+
+                        const blob = new Blob(recordedChunks, {
+
+                            type: 'video/webm'
+
+                        });
+
+                                             console.log('Creating WebM blob:', blob.size);
+
+                                             // Create download link
+
+                        const url = URL.createObjectURL(blob);
+
+                        const a = document.createElement('a');
+
+                        a.href = url;
+
+                        a.download = 'chart_animation_' + new Date().toISOString().replace(/[:.]/g, '-') + '.webm';
+
+                        document.body.appendChild(a);
+
+                        a.click();
+
+                        document.body.removeChild(a);
+
+                                             // Clean up
+
+                        URL.revokeObjectURL(url);
+
+                        recordedChunks = [];
+
+                                             console.log('Recording complete and downloaded');
+
+                        showToast('Animation saved as WebM!', 'success');
+
+                    };
+
+                                     // Start recording
+
+                    console.log('Starting MediaRecorder...');
+
+                    mediaRecorder.start();
+
+                    isRecording = true;
+
+                                     // Update button UI
+
+                    const recordButton = document.getElementById('recordBtn');
+
+                    recordButton.innerHTML = `<i class="bi bi-camera-video-fill"></i> Recording...`;
+
+                    recordButton.disabled = true;
+
+                                     // Wait for animation to complete
+
+                    setTimeout(() => {
+
+                        console.log('Stopping recording after ' + (animationDuration / 1000) + ' seconds');
+
+                        mediaRecorder.stop();
+
+                        isRecording = false;
+
+                        recordButton.innerHTML = `<i class="bi bi-camera-video"></i> Record Animation`;
+
+                        recordButton.disabled = false;
+
+                    }, animationDuration);
+
+                                 } catch (error) {
+
+                    console.error('Error recording:', error);
+
+                    showToast('Error recording animation: ' + error.message, 'danger');
+
+                }
+
+            }
+
+
+
+            // Modify the animateChartTimeline function to handle recording
+
+            function animateChartTimeline() {
+
+                console.log('Animation started');
+
+                             if (!window.globalChartInstance) {
+
+                    console.error('Chart is not initialized');
+
+                    return;
+
+                }
+
+                             if (animationInProgress) {
+
+                    console.log('Animation already in progress');
+
+                    return;
+
+                }
+
+                             animationInProgress = true;
+
+                const animateButton = document.getElementById('animateChartBtn');
+
+                animateButton.disabled = true;
+
+                             // Get the full date range
+
+                const xAxis = window.globalChartInstance.scales.x;
+
+                if (!xAxis) {
+
+                    console.error('X axis not found in chart');
+
+                    animationInProgress = false;
+
+                    animateButton.disabled = false;
+
+                    return;
+
+                }
+
+                const minDate = xAxis.min;
+
+                const maxDate = xAxis.max;
+
+                const dateRange = maxDate - minDate;
+
+                             console.log('Starting animation with date range:', {
+
+                    min: new Date(minDate).toISOString(),
+
+                    max: new Date(maxDate).toISOString()
+
+                });
+
+                             // Animation function
+
+                function updateChart() {
+
+                    const now = Date.now();
+
+                    const elapsed = now - startTime;
+
+                    const progress = Math.min(1, elapsed / animationDuration);
+
+                                     if (progress >= 1) {
+
+                        // Animation complete
+
+                        xAxis.options.min = undefined;
+
+                        xAxis.options.max = undefined;
+
+                        window.globalChartInstance.update('none');
+
+                        animationInProgress = false;
+
+                        animateButton.disabled = false;
+
+                        console.log('Animation complete');
+
+                                             // Stop recording if it's running
+
+                        if (isRecording && mediaRecorder) {
+
+                            mediaRecorder.stop();
+
+                        }
+
+                        return;
+
+                    }
+
+                                     // Calculate the current visible range (left to right)
+
+                    const visibleRange = dateRange * progress;
+
+                    const currentMin = minDate;  // Keep the left edge fixed
+
+                    const currentMax = minDate + visibleRange;  // Move the right edge
+
+                                     // Update chart view
+
+                    xAxis.options.min = currentMin;
+
+                    xAxis.options.max = currentMax;
+
+                                     // Update chart with animation
+
+                    window.globalChartInstance.update('active');
+
+                                     // Continue animation
+
+                    requestAnimationFrame(updateChart);
+
+                }
+
+                // Start animation
+
+                const startTime = Date.now();
+
+                // First hide all data
+
+                xAxis.options.min = minDate;
+
+                xAxis.options.max = minDate; // Initially show nothing
+
+                window.globalChartInstance.update('none');
+
+                // If recording is requested, start recording now
+
+                if (isRecording) {
+
+                    startRecording();
+
+                }
+
+                // Then start the animation
+
+                requestAnimationFrame(updateChart);
+
+            }
+
+
+
+            // Add event listener for the animate button
+
+            document.getElementById('animateChartBtn').addEventListener('click', animateChartTimeline);
+
+          
+
+            // Add event listener for record button
+
+            document.getElementById('recordBtn').addEventListener('click', () => {
+
+                console.log('Record button clicked');
+
+                isRecording = true;
+
+                animateChartTimeline();
+
+            });
+
+        });
+
+    </script>
+
+</body>
+
+</html>
+
+
+
+ 
