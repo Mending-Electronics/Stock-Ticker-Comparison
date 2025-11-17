@@ -1,0 +1,6 @@
+# Désactiver la détection par défaut
+* linguist-detectable=false
+
+# Réactiver uniquement les fichiers HTML/Vue
+*.html linguist-detectable=true
+*.html linguist-language=Vue
